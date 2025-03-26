@@ -131,7 +131,7 @@ try:
     print("Model weights loaded successfully.")
 except FileNotFoundError:
     print("No saved model found, starting training from scratch.")
-    trained_model, losses = train(model, dataloader, epochs=15, device=device)
+    trained_model, losses = train(model, dataloader, epochs=10, device=device)
     test_loss = test(model, test_loader, device)
     print(f"Final Avg Test Loss: {test_loss:.4f}")
     model.load_state_dict(torch.load("../unet_optimized_model.pth", map_location=device))

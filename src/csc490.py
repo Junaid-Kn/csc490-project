@@ -39,6 +39,7 @@ target_path = "../Inspaint_data/Train_Data/Target"
 
 # Get all target images and pair them with their corresponding mask images
 target_images = sorted([f for f in os.listdir(target_path) if f.endswith(('.jpg', '.png'))])
+print(f"Total target images: {len(target_images)}")
 paired_images = [(os.path.join(target_path, img), os.path.join(masked_path, img.replace("target", "mask")))
                  for img in target_images if os.path.exists(os.path.join(masked_path, img.replace("target", "mask")))]
 print(f"Total valid image-mask pairs: {len(paired_images)}")
@@ -57,11 +58,11 @@ test_set = paired_images[training_set_size:]
 len(training_set)
 
 # Save the sampled training and testing pairs to corresponding CSVs
-df = pd.DataFrame(training_set, columns=["Target_Image", "Masked_Image"])
-df.to_csv("../sampled_training_pairs.csv", index=False)
-df = pd.DataFrame(test_set, columns=["Target_Image", "Masked_Image"])
-df.to_csv("../sampled_test_pairs.csv", index=False)
-print("Saved sampled image-mask pairs to 'sampled_pairs.csv'")
+# df = pd.DataFrame(training_set, columns=["Target_Image", "Masked_Image"])
+# df.to_csv("../sampled_training_pairs.csv", index=False)
+# df = pd.DataFrame(test_set, columns=["Target_Image", "Masked_Image"])
+# df.to_csv("../sampled_test_pairs.csv", index=False)
+# print("Saved sampled image-mask pairs to 'sampled_pairs.csv'")
 
 # Create CustomDataset objects from the saved training and testing sets
 training_dataset = CustomDataset("../sampled_training_pairs.csv", transform=transform)

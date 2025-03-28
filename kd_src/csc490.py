@@ -133,7 +133,7 @@ try:
     print("Model weights loaded successfully.")
 except FileNotFoundError:
     print("No saved model found, starting training from scratch.")
-    criterion = DistillationLoss(temperature=2.0)
+    criterion = DistillationLoss()
     optimizer = optim.Adam(student_unet.parameters(), lr=0.001)
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
     trained_model, losses = train_model_distillation(

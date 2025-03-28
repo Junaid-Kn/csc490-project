@@ -15,8 +15,9 @@ from torchvision import transforms
 import pandas as pd
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
+import torch.optim as optim
 
-from train_model import train
+from train_model import train_model_distillation, DistillationLoss
 from test_model import test
 from CustomDataset import CustomDataset
 from StudentCNNModel import StudentCNNModel
@@ -71,8 +72,8 @@ target, mask = training_dataset[0]
 print(target.shape, mask.shape) # Check the shape of the first image and mask pair
 
 # Create DataLoader for batching and shuffling
-dataloader = DataLoader(training_dataset, batch_size=16, shuffle=False, num_workers=2)
-test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=2)
+dataloader = DataLoader(training_dataset, batch_size=4, shuffle=False, num_workers=2)
+test_loader = DataLoader(test_dataset, batch_size=4, shuffle=False, num_workers=2)
 for batch in dataloader:
     target_batch, mask_batch = batch
     print("Batch Target Shape:", target_batch.shape)
@@ -124,21 +125,35 @@ plt.show()  # Ensure the plot is displayed
 ##############################################################
 # Check if GPU is available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = UNetModel()  # Ensure this model is defined
+student_unet = UNetModel().to(device)  # Ensure this model is defined
 
 # Load model weights if available other train from scratch
 try:
-    model.load_state_dict(torch.load("../unet_optimized_model_kd_40.pth", map_location=device))
+    student_unet.load_state_dict(torch.load("student_distilled_model_30.pth", map_location=device))
     print("Model weights loaded successfully.")
 except FileNotFoundError:
     print("No saved model found, starting training from scratch.")
-    trained_model, losses = train(model, dataloader, epochs=40, device=device)
-    test_loss = test(model, test_loader, device)
+    criterion = DistillationLoss(temperature=2.0)
+    optimizer = optim.Adam(student_unet.parameters(), lr=0.001)
+    scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
+    trained_model, losses = train_model_distillation(
+        student=student_unet,
+        teacher_model_path='/../../lama/big-lama',
+        train_loader=dataloader,
+        val_loader=test_loader,
+        criterion=criterion,
+        optimizer=optimizer,
+        scheduler=scheduler,
+        device=device,
+        num_epochs=30,
+        save_path='student_distilled_model_30.pth'
+        )
+    test_loss = test(student_unet, test_loader, device)
     print(f"Final Avg Test Loss: {test_loss:.4f}")
-    model.load_state_dict(torch.load("../unet_optimized_model_kd_40.pth", map_location=device))
+    student_unet.load_state_dict(torch.load("student_distilled_model_30.pth", map_location=device))
     
-model.to(device)
-model.eval()
+
+student_unet.eval()
 print("Model loaded successfully!")
 
 #############################################################
@@ -160,7 +175,7 @@ mask = mask[:, 0:1, :, :]  # Ensure mask has 1 channel
 
 # Run inference
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = model.to(device)
+model = student_unet.to(device)
 output_image, masked_image = run_inference(model, image, mask, device)  # Get both outputs
 
 # Debugging output

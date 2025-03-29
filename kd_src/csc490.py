@@ -39,31 +39,31 @@ masked_path = "../Inspaint_data/Train_Data/Masked"
 target_path = "../Inspaint_data/Train_Data/Target"
 
 # Get all target images and pair them with their corresponding mask images
-target_images = sorted([f for f in os.listdir(target_path) if f.endswith(('.jpg', '.png'))])
-print(f"Total target images: {len(target_images)}")
-paired_images = [(os.path.join(target_path, img), os.path.join(masked_path, img.replace("target", "mask")))
-                 for img in target_images if os.path.exists(os.path.join(masked_path, img.replace("target", "mask")))]
-print(f"Total valid image-mask pairs: {len(paired_images)}")
+# target_images = sorted([f for f in os.listdir(target_path) if f.endswith(('.jpg', '.png'))])
+# print(f"Total target images: {len(target_images)}")
+# paired_images = [(os.path.join(target_path, img), os.path.join(masked_path, img.replace("target", "mask")))
+#                  for img in target_images if os.path.exists(os.path.join(masked_path, img.replace("target", "mask")))]
+# print(f"Total valid image-mask pairs: {len(paired_images)}")
 
 # Decide training and test split ratio
-total_size = len(paired_images)
-training_set_size = int(0.9 * total_size) # 0.5 is 50% of the paired_images
-test_set_size = total_size - training_set_size
-print(f"Total size: {total_size}")
-print(f"Train-test split {training_set_size}:{test_set_size}")
+# total_size = len(paired_images)
+# training_set_size = int(0.9 * total_size) # 0.5 is 50% of the paired_images
+# test_set_size = total_size - training_set_size
+# print(f"Total size: {total_size}")
+# print(f"Train-test split {training_set_size}:{test_set_size}")
 
 # Shuffle the paired images and split into training and test sets
-random.shuffle(paired_images)
-training_set = paired_images[:training_set_size]
-test_set = paired_images[training_set_size:]
-len(training_set)
+# random.shuffle(paired_images)
+# training_set = paired_images[:training_set_size]
+# test_set = paired_images[training_set_size:]
+# len(training_set)
 
 # Save the sampled training and testing pairs to corresponding CSVs
-df = pd.DataFrame(training_set, columns=["Target_Image", "Masked_Image"])
-df.to_csv("../sampled_training_pairs.csv", index=False)
-df = pd.DataFrame(test_set, columns=["Target_Image", "Masked_Image"])
-df.to_csv("../sampled_test_pairs.csv", index=False)
-print("Saved sampled image-mask pairs to 'sampled_pairs.csv'")
+# df = pd.DataFrame(training_set, columns=["Target_Image", "Masked_Image"])
+# df.to_csv("../sampled_training_pairs.csv", index=False)
+# df = pd.DataFrame(test_set, columns=["Target_Image", "Masked_Image"])
+# df.to_csv("../sampled_test_pairs.csv", index=False)
+# print("Saved sampled image-mask pairs to 'sampled_pairs.csv'")
 
 # Create CustomDataset objects from the saved training and testing sets
 training_dataset = CustomDataset("../sampled_training_pairs.csv", transform=transform)
@@ -138,7 +138,7 @@ except FileNotFoundError:
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
     trained_model, losses = train_model_distillation(
         student=student_unet,
-        teacher_model_path='/../../lama/big-lama',
+        teacher_model_path='/mnt/d/Desktop/UTM/Year5/CSC490/lama/big-lama',
         train_loader=dataloader,
         val_loader=test_loader,
         criterion=criterion,

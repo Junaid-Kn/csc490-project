@@ -1,0 +1,20 @@
+indir: /mnt/d/Desktop/UTM/Year5/CSC490/csc490-project/kd_src/temp_inputs
+outdir: /mnt/d/Desktop/UTM/Year5/CSC490/csc490-project/kd_src/teacher_outputs
+model:
+  path: /mnt/d/Desktop/UTM/Year5/CSC490/lama/big-lama
+  checkpoint: best.ckpt
+dataset:
+  kind: default
+  img_suffix: .png
+  pad_out_to_modulo: 8
+device: cuda
+out_key: inpainted
+refine: false
+refiner:
+  gpu_ids: 0,1
+  modulo: ${dataset.pad_out_to_modulo}
+  n_iters: 15
+  lr: 0.002
+  min_side: 512
+  max_scales: 3
+  px_budget: 1800000

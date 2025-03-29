@@ -14,7 +14,7 @@ from torchvision.utils import save_image
 from torchvision import transforms
 import copy
 import subprocess
-import torchvision
+from torchmetrics.image import StructuralSimilarityIndexMeasure
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -34,7 +34,7 @@ class DistillationLoss(nn.Module):
         if use_ssim:
             self.ssim_loss = SSIMLoss()  # Custom SSIM loss
 
-    def forward(self, student_outputs, teacher_outputs, target_imgs):
+    def forward(self, student_outputs, teacher_outputs, target_imgs, alpha):
         """
         Args:
         - student_outputs: Student model predictions (B, 3, H, W)
@@ -58,11 +58,17 @@ class DistillationLoss(nn.Module):
 
 class SSIMLoss(nn.Module):
     """Structural Similarity (SSIM) Loss for image quality."""
-    def __init__(self):
+    def __init__(self, data_range=1.0):
+        """
+        Args:
+        - data_range: The range of the input images (e.g., 1.0 for [0, 1] normalized images).
+        """
         super().__init__()
+        self.data_range = data_range
+        self.ssim = StructuralSimilarityIndexMeasure(data_range=data_range).to(device)
 
     def forward(self, img1, img2):
-        return 1 - torchvision.ops.ssim(img1, img2, data_range=1.0)
+        return 1 - self.ssim(img1, img2)
     
 
 def clear_dir(directory):
@@ -87,7 +93,7 @@ def train_model_distillation(
     device,
     num_epochs,
     alpha=0.5,
-    save_path='student_distilled_model.pth'
+    save_path='student_distilled_model_30.pth'
 ):
     student.to(device)
 
@@ -161,7 +167,7 @@ def train_model_distillation(
 def get_teacher_predictions(temp_inputs, model_path, batch_size):
     temp_outputs = os.path.join(os.getcwd(), 'teacher_outputs')
     cmd = (
-        f"PYTHONPATH=. TORCH_HOME={os.getcwd()} python3 bin/predict.py "
+        f"PYTHONPATH=. TORCH_HOME={os.getcwd()} python3 ../../lama/bin/predict.py "
         f"model.path={model_path} "
         f"indir={os.path.abspath(temp_inputs)} "
         f"outdir={os.path.abspath(temp_outputs)} "

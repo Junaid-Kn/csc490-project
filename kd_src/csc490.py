@@ -129,7 +129,7 @@ student_unet = UNetModel().to(device)  # Ensure this model is defined
 
 # Load model weights if available other train from scratch
 try:
-    student_unet.load_state_dict(torch.load("student_distilled_model_30.pth", map_location=device))
+    student_unet.load_state_dict(torch.load("student_distilled_model_20.pth", map_location=device))
     print("Model weights loaded successfully.")
 except FileNotFoundError:
     print("No saved model found, starting training from scratch.")
@@ -145,12 +145,12 @@ except FileNotFoundError:
         optimizer=optimizer,
         scheduler=scheduler,
         device=device,
-        num_epochs=30,
-        save_path='student_distilled_model_30.pth'
+        num_epochs=20,
+        save_path='student_distilled_model_20.pth'
         )
     test_loss = test(student_unet, test_loader, device)
     print(f"Final Avg Test Loss: {test_loss:.4f}")
-    student_unet.load_state_dict(torch.load("student_distilled_model_30.pth", map_location=device))
+    student_unet.load_state_dict(torch.load("student_distilled_model_20.pth", map_location=device))
     
 
 student_unet.eval()

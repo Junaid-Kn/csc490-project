@@ -175,7 +175,7 @@ def get_teacher_predictions(temp_inputs, model_path, batch_size):
     )
     try:
         result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
-        print("Subprocess STDOUT:", result.stdout)
+        #print("Subprocess STDOUT:", result.stdout)
         print("Subprocess STDERR:", result.stderr)
         output_files = sorted([f for f in os.listdir(temp_outputs) if f.endswith('.png')])
         print("Output files:", output_files)

@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --account=pate1419
+#SBATCH --account=def-ajbonner
 #SBATCH --gres=gpu:4         # Number of GPU(s) per node
 #SBATCH --cpus-per-task=16         # CPU cores/threads
 #SBATCH --mem=20G               # memory per node
@@ -9,5 +9,5 @@
 module load python cuda scipy-stack
 source ./env/bin/activate
 
-
-python -m ./csc490-project/kd_src/csc490.py
+cd ./csc490-project/kd_src
+python -m ./csc490.py

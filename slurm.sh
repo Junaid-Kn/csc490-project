@@ -10,4 +10,4 @@ module load python cuda scipy-stack
 source ./env/bin/activate
 
 
-python -m ./csc490.py
+python -m ./csc490-project/kd_src/csc490.py

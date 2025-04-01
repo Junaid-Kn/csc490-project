@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --account=def-someuser
+#SBATCH --account=pate1419
 #SBATCH --gres=gpu:4         # Number of GPU(s) per node
 #SBATCH --cpus-per-task=16         # CPU cores/threads
 #SBATCH --mem=20G               # memory per node

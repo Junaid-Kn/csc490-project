@@ -45,7 +45,7 @@ If no object is detected, a random mask is generated.
 ![Untitled design (1)](https://github.com/user-attachments/assets/4eee537a-608d-482a-a527-d70cdaf56494)
 
 
-As you can see this model is substantially smaller than the previous model with only about 7 million parameters and has only been trained for 30 epochs on a dataset of about 20000 images and it works relatively well for a 256x256 image.
+As you can see this model is substantially smaller than the Big-Lama model (which contains 51 million parameters) with only about 18 million parameters and has only been trained for 30 epochs on a dataset of about 20000 images and it works relatively well for a 256x256 image.
 Furthermore, it does work for higher resolution images as is evident in the second example.
 
 

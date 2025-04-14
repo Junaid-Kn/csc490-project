@@ -39,23 +39,13 @@ Masking: Object-aware masks generated using Mask R-CNN.
 
 If no object is detected, a random mask is generated.
 
-Folder Structure
-sql
-Copy
-Edit
-Target/ → Original images  
-Mask/   → Binary masks indicating occluded areas  
-Label/  → Images with masked areas whited out  
-💡 Why This Approach Works
-Creates realistic and diverse occlusions for robust training.
+# Examples of our work 
 
-Maintains a well-organized dataset structure for reproducibility and scalability.
+![Untitled design](https://github.com/user-attachments/assets/d4840948-7982-42ec-b88f-5ef9d032b888)
+![Untitled design (1)](https://github.com/user-attachments/assets/4eee537a-608d-482a-a527-d70cdaf56494)
 
-📚 References
-Knowledge Distillation Illustration – Neptune AI
 
-Dogra et al., Exploring image inpainting for seamless restitution (Laser Focus World, 2023)
+As you can see this model is substantially smaller than the previous model with only about 7 million parameters and has only been trained for 30 epochs on a dataset of about 20000 images and it works relatively well for a 256x256 image.
+Furthermore, it does work for higher resolution images as is evident in the second example.
 
-Prakya et al., Photobombing removal benchmarking, Advances in Visual Computing, 2022.
 
-Let me know if you'd like a version with code examples, model architecture, or usage instructions added in!

@@ -22,7 +22,7 @@ We leverage knowledge distillation to train a smaller "student" model to replica
 
 - Maintained visual fidelity
 
-#🗂️ Dataset: Places2
+# 🗂️ Dataset: Places2
 We use the Places2 dataset due to its:
 
 - High-resolution images
